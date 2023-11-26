@@ -166,7 +166,7 @@ char *binarioParaHexadecimal(int digitosBinario,int *numeroBinario){
 int main(){
 	
 	int i;
-	char numeroRomano[12];
+	char numeroRomano[13];
 	scanf("%[^\n]",numeroRomano);
 	
 	
