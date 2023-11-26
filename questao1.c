@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <locale.h>
 #include <math.h>
 
 int algarismoRomanoParaDecimal(char algarismoRomano){
@@ -32,155 +31,169 @@ int algarismoRomanoParaDecimal(char algarismoRomano){
 	}
 }
 
+char algarismoDecimalParaHexadecimal(int algarismoDecimal){
+	switch(algarismoDecimal){
+		case 0:
+			return '0';
+			break;
+		case 1:
+			return '1';
+			break;
+		case 2:
+			return '2';
+			break;
+		case 3:
+			return '3';
+			break;
+		case 4:
+			return '4';
+			break;
+		case 5:
+			return '5';
+			break;
+		case 6:
+			return '6';
+			break;
+		case 7:
+			return '7';
+			break;
+		case 8:
+			return '8';
+			break;
+		case 10:
+			return 'a';
+			break;
+		case 11:
+			return 'b';
+			break;
+		case 12:
+			return 'c';
+			break;
+		case 13:
+			return 'd';
+			break;
+		case 14:
+			return 'e';
+			break;
+		case 15:
+			return 'f';
+	}
+}
+
 int romanoParaDecimal(char numeroRomano[]){
-	int i;
-	int qtdLetras = sizeof(numeroRomano)/sizeof(numeroRomano[0]);
+	int i=0;
 	int numeroDecimal = 0;
-	for(i=0;i<qtdLetras;i++){
+	while(numeroRomano[i] != '\0'){
+		//arrays de char em C terminam com o caractere '\0'
+		//obs.: não é possível determinar o tamanho do array usando sizeof!
 		if(algarismoRomanoParaDecimal(numeroRomano[i+1]) > algarismoRomanoParaDecimal(numeroRomano[i])){
 			numeroDecimal -= algarismoRomanoParaDecimal(numeroRomano[i]);
 		}else{
 			numeroDecimal += algarismoRomanoParaDecimal(numeroRomano[i]);
 		}
+		i++;
 	}
 	return numeroDecimal;
 }
 
-int *decimalParaBinario(int qtdDigitos,int numeroDecimal){
-	
+int *decimalParaBinario(int digitosBinario,int numeroDecimal){
 	int i;
-
-	int *numeroBinario = (int*) malloc(qtdDigitos * sizeof(int)); //alocação dinâmica de memória
-	int binarioTemp[qtdDigitos]; //número binário ao contrário
-	
+	int *numeroBinario = (int*) malloc(digitosBinario * sizeof(int)); //alocação dinâmica de memória
+	int binarioTemp[digitosBinario]; //número binário ao contrário
 	int temp = numeroDecimal;
-	for(i=0;i<qtdDigitos;i++){
-		binarioTemp[i] = temp % 2;
+	for(i=0;i<digitosBinario;i++){
+		binarioTemp[i] = temp % 2; //guarda o resto da divisão (0 ou 1)
 		temp /= 2;
 	}
-	
-	int j = qtdDigitos;
-	for(i=0;i<qtdDigitos;i++){
+	int j = digitosBinario;
+	for(i=0;i<digitosBinario;i++){
 		j--;
-		numeroBinario[i] = binarioTemp[j];
+		numeroBinario[i] = binarioTemp[j]; //coloca o número binário na ordem certa
 	}
-	
 	return numeroBinario;
 }
 
 char *binarioParaHexadecimal(int digitosBinario,int *numeroBinario){
-	
 	int i;
-	
-	int n;
+	//calcula a qtd de algarismos em hexadecimal
+	int digitosHexadecimal;
 	if(digitosBinario % 4 == 0){
-		n = digitosBinario/4;	
+		digitosHexadecimal = digitosBinario/4;	
 	}else{
-		n = (digitosBinario/4)+1;
+		digitosHexadecimal = (digitosBinario/4)+1;
 	}
-	
-	char *numeroHexadecimal = (char*) malloc(n * sizeof(char)); //alocação dinâmica de memória
-	
+	char *numeroHexadecimal = (char*) malloc(digitosHexadecimal * sizeof(char)); //alocação dinâmica de memória
+	//converte binario para hexadecimal (bin->dec->hex)
 	if(digitosBinario % 4 == 0){
 		int k = 0;
-		for(i=0;i<n;i++){
+		for(i=0;i<digitosHexadecimal;i++){
 			int temp = 0;
 			int pos = 3;
-			printf("\nbin para decimal: ");
 			while(pos>=0){
-				printf("(%d x 2^%d) ",numeroBinario[k],pos);
 				temp += numeroBinario[k] * pow(2,pos);
 				pos--;
 				k++;
 			}
-			printf("\nresultado = %d",temp);
-			switch(temp){
-				case 0:
-					numeroHexadecimal[i] = '0';
-					break;
-				case 1:
-					numeroHexadecimal[i] = '1';
-					break;
-				case 2:
-					numeroHexadecimal[i] = '2';
-					break;
-				case 3:
-					numeroHexadecimal[i] = '3';
-					break;
-				case 4:
-					numeroHexadecimal[i] = '4';
-					break;
-				case 5:
-					numeroHexadecimal[i] = '5';
-					break;
-				case 6:
-					numeroHexadecimal[i] = '6';
-					break;
-				case 7:
-					numeroHexadecimal[i] = '7';
-					break;
-				case 8:
-					numeroHexadecimal[i] = '8';
-					break;
-				case 10:
-					numeroHexadecimal[i] = 'a';
-					break;
-				case 11:
-					numeroHexadecimal[i] = 'b';
-					break;
-				case 12:
-					numeroHexadecimal[i] = 'c';
-					break;
-				case 13:
-					numeroHexadecimal[i] = 'd';
-					break;
-				case 14:
-					numeroHexadecimal[i] = 'e';
-					break;
-				case 15:
-					numeroHexadecimal[i] = 'f';
-				}
+			numeroHexadecimal[i] = algarismoDecimalParaHexadecimal(temp);
+		}
+	}else{
+		int digitosRestantes = digitosBinario % 4; //guarda a quantidade de dígitos que não formam uma sequência de 4 algarismos binários
+		int espacosVazios = 4-digitosRestantes; //guarda a quantidade de espaços à esquerda para preencher com ZERO
+		int k = 0;
+		int temp = 0;
+		for(i=3;i>(3-espacosVazios);i--){
+			temp += 0 * pow(2,i);
+		}
+		for(i=3-espacosVazios;i>=0;i--){
+			temp += numeroBinario[k] * pow(2,i);
+			k++;
+		}
+		numeroHexadecimal[0] = algarismoDecimalParaHexadecimal(temp);
+		for(i=1;i<digitosHexadecimal;i++){
+			temp = 0;
+			int pos = 3;
+			while(pos>=0){
+				temp += numeroBinario[k] * pow(2,pos);
+				pos--;
+				k++;
+			}
+			numeroHexadecimal[i] = algarismoDecimalParaHexadecimal(temp);
 		}
 	}
-	
-	printf("\nhexadecimal: ");
-	for(i=0;i<n;i++){
-		printf("%c",numeroHexadecimal[i]);
-	}
-	printf("\n");
-	
 	return numeroHexadecimal;
 }
 
 int main(){
 	
-	setlocale(LC_ALL,"Portuguese");
-	
 	int i;
-	
-	char numeroRomano[255];
+	char numeroRomano[12];
 	scanf("%[^\n]",numeroRomano);
 	
-	int numeroDecimal = romanoParaDecimal(numeroRomano);
 	
-	//define a quantidade de algarismos em binário
+	//REALIZA OS CÁLCULOS
+	int numeroDecimal = romanoParaDecimal(numeroRomano); //converte romano para decimal
+	//calcula a quantidade de algarismos em binário
 	int aux = 2;
-	int qtdDigitos = 1;
+	int digitosBinario = 1;
 	while(aux<=numeroDecimal){
 		aux *= 2;
-		qtdDigitos += 1;
+		digitosBinario += 1;
 	}
-	int *numeroBinario = decimalParaBinario(qtdDigitos,numeroDecimal);
+	int *numeroBinario = decimalParaBinario(digitosBinario,numeroDecimal); //converte decimal para binário
+	char *numeroHexadecimal = binarioParaHexadecimal(digitosBinario,numeroBinario); //converte binário para hexadecimal
 	
-	int *numeroHexadecimal = binarioParaHexadecimal(qtdDigitos,numeroBinario);
 	
 	//EXIBE OS RESULTADOS
-	printf("M na base 2: ");
-	for(i=0;i<qtdDigitos;i++){
+	printf("%s na base 2: ",numeroRomano);
+	for(i=0;i<digitosBinario;i++){
 		printf("%d",numeroBinario[i]);
 	}
 	printf("\n");
-	printf("M na base 10: %d",numeroDecimal);
+	printf("%s na base 10: %d",numeroRomano,numeroDecimal);
+	printf("\n");
+	printf("%s na base 16: %s",numeroRomano,numeroHexadecimal);
+	printf("\n");
+	
 	
 	return 0;
 }
