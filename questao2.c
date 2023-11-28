@@ -17,6 +17,7 @@ investimento leEntrada(){
 
 void calculaMontante(investimento investimento){
 	int i;
+	investimento.montante = 0;
 	for(i=1;i<=investimento.meses;i++){
 		investimento.montante += investimento.aporte;
 		investimento.montante *= 1+investimento.taxa;

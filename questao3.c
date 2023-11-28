@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <ctype.h>
+#include <locale.h>
 
 bool eLetra(char input){
 	switch(input){
@@ -163,6 +164,8 @@ void podeTransitar(int tamanhoPlaca,char placa[],char diaDaSemana[]){
 		diaDaSemanaLower[i] = tolower(diaDaSemana[i]);
 		i++;
 	}
+	diaDaSemanaLower[i] = '\0';
+	
 	//verifica se a placa pode circular
 	if(strcmp(diaDaSemana,"SEGUNDA-FEIRA") == 0){
 		if(placa[tamanhoPlaca-1] == '0' || placa[tamanhoPlaca-1] == '1'){
@@ -205,7 +208,7 @@ void podeTransitar(int tamanhoPlaca,char placa[],char diaDaSemana[]){
 }
 
 int main(){
-	
+	setlocale(LC_ALL,"Portuguese");
 	//VARIÁVEIS
 	char placa[9]; //guarda 9 espaços, pois um espaço é reservado para o caracter '\0'
 	char diaDaSemana[20];

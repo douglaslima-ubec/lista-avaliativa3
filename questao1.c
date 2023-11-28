@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <locale.h>
 
 int algarismoRomanoParaDecimal(char algarismoRomano){
 	switch(algarismoRomano){
@@ -59,6 +60,9 @@ char algarismoDecimalParaHexadecimal(int algarismoDecimal){
 			break;
 		case 8:
 			return '8';
+			break;
+		case 9:
+			return '9';
 			break;
 		case 10:
 			return 'a';
@@ -165,6 +169,7 @@ char *binarioParaHexadecimal(int digitosBinario,int *numeroBinario){
 
 int main(){
 	
+	setlocale(LC_ALL,"Portuguese");
 	int i;
 	char numeroRomano[13];
 	scanf("%[^\n]",numeroRomano);
